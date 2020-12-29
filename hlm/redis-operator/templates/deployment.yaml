@@ -5,6 +5,7 @@ metadata:
     app.kubernetes.io/name: "{{ .Release.Name }}"
   name: "{{ .Release.Name }}"
 spec:
+  minReadySeconds: 60
   replicas: 1
   selector:
     matchLabels:
@@ -16,7 +17,6 @@ spec:
       labels:
         app.kubernetes.io/name: "{{ .Release.Name }}"
     spec:
-      minReadySeconds: 60
       serviceAccountName: "{{ .Release.Name }}"
       containers:
         - name: "{{ .Release.Name }}"
