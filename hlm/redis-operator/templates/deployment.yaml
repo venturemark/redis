@@ -32,4 +32,16 @@ spec:
             requests:
               cpu: "10m"
               memory: "50Mi"
+          # We need a liveness probe in order to give the redis-operator enough
+          # time to install the CRD. Otherwhise we end up in a deadlock
+          # situation with the flux controller automation when installing the
+          # operator and the redis failover CRD. The endpoint checked here is
+          # the health check endpoint of the injected istio sidecar because the
+          # redis operator does not provide a health check endpoint itself.
+          livenessProbe:
+            httpGet:
+              path: "/healthz/ready"
+              port: 15021
+            initialDelaySeconds: 60
+            periodSeconds: 10
       restartPolicy: "Always"
