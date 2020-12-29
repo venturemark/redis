@@ -1,0 +1,5 @@
+image:
+  registry: "quay.io"
+  organization: "spotahome"
+  repository: "redis-operator"
+  tag: "v1.0.0"
