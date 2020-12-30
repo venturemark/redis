@@ -2,14 +2,29 @@ apiVersion: "databases.spotahome.com/v1"
 kind: "RedisFailover"
 metadata:
   name: "{{ .Release.Name }}"
+  labels:
+    app.kubernetes.io/name: "{{ .Release.Name }}"
 spec:
   sentinel:
     replicas: 3
     resources:
       requests:
         cpu: "100m"
-      limits:
         memory: "100Mi"
+      limits:
+        cpu: "500m"
+        memory: "500Mi"
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: "app.kubernetes.io/component"
+                  operator: "In"
+                  values:
+                    - "sentinel"
+            topologyKey: "kubernetes.io/hostname"
+
   redis:
     replicas: 3
     resources:
@@ -17,5 +32,18 @@ spec:
         cpu: "100m"
         memory: "100Mi"
       limits:
-        cpu: "400m"
+        cpu: "500m"
         memory: "500Mi"
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: "app.kubernetes.io/component"
+                  operator: "In"
+                  values:
+                    - "redis"
+            topologyKey: "kubernetes.io/hostname"
+
+  labelWhitelist:
+    - "app.kubernetes.io/name"
