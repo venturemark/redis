@@ -1,6 +1,6 @@
 # redis
 
-Redis deployment for kubernetes. The redis sentinel setup configured here is
+Redis deployment for Kubernetes. The Redis sentinel setup configured here is
 managed using https://github.com/spotahome/redis-operator.
 
 ```
